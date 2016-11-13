@@ -13,6 +13,7 @@ auth.set_access_token(token_accessor.get_access_token(), token_accessor.get_acce
 api = tweepy.API(auth)
 
 #Read URLs from file to get Tweet IDs
+#the below file is a file of URLs one each new line of every tweet favorited by the user
 url_list = open("favorites_url.txt", "r")
 tweet_id_list_of_list = list()
 tweet_ids = list()
@@ -29,26 +30,24 @@ for line in url_list:
         	tweet_id_list_of_list.append(list(tweet_ids))
         	tweet_ids[:] = []
 
-# print(len(tweet_id_list_of_list))
-
-# for slot in tweet_id_list_of_list:
-# 	try:
-# 		page = api.statuses_lookup(slot)
-# 		for status in page:
-# 			print "Like Number : " + str(like_number)
-# 			print "Tweet ID: " +  str(status.id)
-# 			print "Originator Name: " + status.author.screen_name.encode('utf-8') 
-# 			print "Tweet Text: \"" + status.text.encode('utf-8') + "\"" 
-# 			print "Date of Tweet: " + status.created_at.strftime("%Y-%m-%d %H:%M:%S")
-# 			print "Originator's Source : " + status.source.encode('utf-8')
-# 			print "URL : https://twitter.com/statuses/" + str(status.id)
-# 			print ""
-# 			like_number = like_number + 1
-# 	except tweepy.error.TweepError:
-# 		time.sleep(15 * 60)
-# 	except KeyboardInterrupt:
-#     	sys.exit()
-# 	except:
-# 		#keep a list of tweets the script cannot parse
-# 		print("Exception: ", sys.exc_info()[0])
+for slot in tweet_id_list_of_list:
+	try:
+		#get the statuses of the 100 tweets at a time
+		page = api.statuses_lookup(slot)
+		for status in page:
+			print "Like Number : " + str(like_number)
+			print "Tweet ID: " +  str(status.id)
+			print "Originator Name: " + status.author.screen_name.encode('utf-8') 
+			print "Tweet Text: \"" + status.text.encode('utf-8') + "\"" 
+			print "Date of Tweet: " + status.created_at.strftime("%Y-%m-%d %H:%M:%S")
+			print "Originator's Source : " + status.source.encode('utf-8')
+			print "URL : https://twitter.com/statuses/" + str(status.id)
+			print ""
+			like_number = like_number + 1
+	except tweepy.error.TweepError:
+		time.sleep(15 * 60)
+	except KeyboardInterrupt:
+		sys.exit()
+	except:
+		print("Exception: ", sys.exc_info()[0])
 
